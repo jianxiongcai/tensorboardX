@@ -195,12 +195,7 @@ class SummaryWriter(object):
         self.scalar_dict = {}
 
         # TODO (ml7): Remove try-except when PyTorch 1.0 merges PyTorch and Caffe2
-        try:
-            import caffe2
-            from caffe2.python import workspace  # workaround for pytorch/issue#10249
-            self.caffe2_enabled = True
-        except (SystemExit, ImportError):
-            self.caffe2_enabled = False
+        self.caffe2_enabled = False
 
     def __append_to_scalar_dict(self, tag, scalar_value, global_step,
                                 timestamp):
@@ -255,18 +250,6 @@ class SummaryWriter(object):
         """
         if self._check_caffe2(scalar_value):
             scalar_value = workspace.FetchBlob(scalar_value)
-        self.get_file_writer().add_summary(
-            scalar(tag, scalar_value), global_step, walltime)
-
-    def add_raw_scalar(self, tag, scalar_value, global_step=None, walltime=None):
-        """Add scalar data to summary. (bypassing caffe2 check)
-
-        Args:
-            tag (string): Data identifier
-            scalar_value (float or string/blobname): Value to save
-            global_step (int): Global step value to record
-            walltime (float): Optional override default walltime (time.time()) of event
-        """
         self.get_file_writer().add_summary(
             scalar(tag, scalar_value), global_step, walltime)
 
