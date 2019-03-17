@@ -258,6 +258,18 @@ class SummaryWriter(object):
         self.get_file_writer().add_summary(
             scalar(tag, scalar_value), global_step, walltime)
 
+    def add_raw_scalar(self, tag, scalar_value, global_step=None, walltime=None):
+        """Add scalar data to summary. (bypassing caffe2 check)
+
+        Args:
+            tag (string): Data identifier
+            scalar_value (float or string/blobname): Value to save
+            global_step (int): Global step value to record
+            walltime (float): Optional override default walltime (time.time()) of event
+        """
+        self.get_file_writer().add_summary(
+            scalar(tag, scalar_value), global_step, walltime)
+
     def add_scalars(self, main_tag, tag_scalar_dict, global_step=None, walltime=None):
         """Adds many scalar data to summary.
 
